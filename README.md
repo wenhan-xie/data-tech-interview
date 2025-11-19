@@ -58,7 +58,41 @@ If you want to work with other databases. You can do that by changing two things
 
 You can read more about the input data in the [data description](data_description.md) file.
 
+
+## Project Structure
+
+```
+data-tech-interview/
+├── models/
+│   ├── staging/
+│   │   ├── __sources.yml          # Source definitions
+│   │   ├── schema.yml             # Staging model tests
+│   │   ├── stg_transactions.sql
+│   │   ├── stg_transaction_transitions.sql
+│   │   └── stg_termination_reasons.sql
+│   └── marts/
+│       ├── schema.yml             # Mart model tests
+│       ├── fct_transactions.sql   # Fact table
+│       ├── transaction_closures.sql
+│       ├── avg_open_time_by_month.sql
+│       ├── termination_reasons_analysis.sql
+│       └── gross_proceeds_by_transfer_method.sql
+├── tests/
+│   ├── assert_transaction_logic.sql
+│   └── assert_reconciliation.sql
+├── seeds/
+└── README.md
+```
+
 ## Task 1 Answers
 
-See [TASK1_ANSWERS.md](TASK1_ANSWERS.md) for complete answers to all 5 questions.
+See [TASK1_ANSWERS.md](TASK1_ANSWERS.md) for complete answers to all questions.
+
+
+## Task 2 Answers
+
+See Pull Request and comments for a peer code review.
+
+
+
 
