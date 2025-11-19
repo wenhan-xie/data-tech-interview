@@ -2,28 +2,15 @@
 
 ## Overview
 
-This document answers the 5 questions from Task 1 and demonstrates how the dbt models address the Execution team's business questions.
+This document answers questions from Task 1 and demonstrates how the dbt models address the Execution team's business questions.
 
 ---
-
-## Business Questions & Solutions
 
 ### Q1: When did a specific transaction 'close'?
 
 **Answer Model:** `models/marts/transaction_closures.sql`
 
 This model provides the `closed_at` timestamp for each transaction that has closed.
-
-**Query Example:**
-```sql
-SELECT 
-    transaction_id,
-    transaction_created_at,
-    closed_at,
-    days_open
-FROM {{ ref('transaction_closures') }}
-ORDER BY closed_at DESC
-```
 
 **Result:** A table with one row per closed transaction, showing when it closed and how long it was open.
 
@@ -35,18 +22,6 @@ ORDER BY closed_at DESC
 
 This model calculates average open time by month for all terminated transactions.
 
-**Query Example:**
-```sql
-SELECT 
-    transaction_month,
-    total_transactions,
-    avg_days_open,
-    min_hours_open,
-    max_hours_open
-FROM {{ ref('avg_open_time_by_month') }}
-ORDER BY transaction_month DESC
-```
-
 **Result:** Monthly aggregates showing average, min, and max open time.
 
 ---
@@ -57,17 +32,6 @@ ORDER BY transaction_month DESC
 
 This model aggregates termination reasons with counts, percentages, and total proceeds.
 
-**Query Example:**
-```sql
-SELECT 
-    termination_reason,
-    transaction_count,
-    percentage,
-    total_gross_proceeds
-FROM {{ ref('termination_reasons_analysis') }}
-ORDER BY transaction_count DESC
-```
-
 **Result:** Ranked list of termination reasons with transaction counts and percentages.
 
 ---
@@ -77,17 +41,6 @@ ORDER BY transaction_count DESC
 **Answer Model:** `models/marts/gross_proceeds_by_transfer_method.sql`
 
 This model aggregates gross proceeds by transfer method for visualization.
-
-**Query Example:**
-```sql
-SELECT 
-    transfer_method,
-    transaction_count,
-    total_gross_proceeds,
-    percentage_of_total_proceeds
-FROM {{ ref('gross_proceeds_by_transfer_method') }}
-ORDER BY total_gross_proceeds DESC
-```
 
 **Result:** Transfer methods ranked by total gross proceeds.
 
@@ -409,55 +362,3 @@ All validations are automated through dbt tests:
 - Automated email reports with key metrics
 
 ---
-
-## Running the Models
-
-To run all models and tests:
-
-```bash
-# Activate virtual environment
-source venv/bin/activate
-
-# Seed data
-dbt seed
-
-# Run all models
-dbt run
-
-# Run all tests
-dbt test
-
-# Generate documentation
-dbt docs generate
-dbt docs serve
-```
-
-All models compile and run successfully. All 43 tests pass.
-
----
-
-## Project Structure
-
-```
-data-tech-interview/
-├── models/
-│   ├── staging/
-│   │   ├── __sources.yml          # Source definitions
-│   │   ├── schema.yml             # Staging model tests
-│   │   ├── stg_transactions.sql
-│   │   ├── stg_transaction_transitions.sql
-│   │   └── stg_termination_reasons.sql
-│   └── marts/
-│       ├── schema.yml             # Mart model tests
-│       ├── fct_transactions.sql   # Fact table
-│       ├── transaction_closures.sql
-│       ├── avg_open_time_by_month.sql
-│       ├── termination_reasons_analysis.sql
-│       └── gross_proceeds_by_transfer_method.sql
-├── tests/
-│   ├── assert_transaction_logic.sql
-│   └── assert_reconciliation.sql
-├── seeds/
-└── README.md
-```
-
