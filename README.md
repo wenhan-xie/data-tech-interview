@@ -57,3 +57,8 @@ If you want to work with other databases. You can do that by changing two things
 ## Data description
 
 You can read more about the input data in the [data description](data_description.md) file.
+
+## Task 1 Answers
+
+See [TASK1_ANSWERS.md](TASK1_ANSWERS.md) for complete answers to all 5 questions.
+

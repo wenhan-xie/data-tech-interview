@@ -1,0 +1,56 @@
+version: 2
+
+models:
+  - name: stg_transactions
+    description: "Cleaned transaction data with calculated active status"
+    columns:
+      - name: transaction_id
+        description: "Unique transaction identifier"
+        tests:
+          - unique
+          - not_null
+      - name: state
+        description: "Current state of the transaction"
+        tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ['cancelled', 'expired', 'closed_paid', 'approval_declined', 'pending_approval', 'open', 'bid_accepted']
+      - name: is_active
+        description: "Whether transaction is currently active"
+        tests:
+          - not_null
+      - name: gross_proceeds
+        tests:
+          - dbt_utils.accepted_range:
+              arguments:
+                min_value: 0
+                inclusive: true
+              
+  - name: stg_transaction_transitions
+    description: "Log table of transaction state changes"
+    columns:
+      - name: transition_id
+        tests:
+          - unique
+          - not_null
+      - name: transaction_id
+        tests:
+          - not_null
+      - name: new_state
+        tests:
+          - not_null
+      - name: transitioned_at
+        tests:
+          - not_null
+          
+  - name: stg_termination_reasons
+    description: "Transaction termination reasons"
+    columns:
+      - name: transaction_id
+        tests:
+          - not_null
+      - name: termination_reason
+        tests:
+          - not_null
+

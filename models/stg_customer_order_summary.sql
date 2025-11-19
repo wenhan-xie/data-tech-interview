@@ -1,3 +1,5 @@
+{{ config(enabled = false) }}
+
 WITH
 
 raw_customers AS (

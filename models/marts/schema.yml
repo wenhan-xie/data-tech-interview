@@ -1,0 +1,89 @@
+version: 2
+
+models:
+  - name: fct_transactions
+    description: "Fact table with transaction details including calculated open time and closure timestamps"
+    columns:
+      - name: transaction_id
+        description: "Unique transaction identifier"
+        tests:
+          - unique
+          - not_null
+      - name: closed_at
+        description: "Timestamp when transaction closed"
+      - name: hours_open
+        description: "Number of hours transaction was open"
+        tests:
+          - dbt_utils.accepted_range:
+              arguments:
+                min_value: 0
+                inclusive: true
+      - name: termination_reason
+        description: "Reason transaction was terminated"
+      - name: transfer_method
+        description: "Transfer method"
+      - name: gross_proceeds
+        description: "Gross proceeds"
+        tests:
+          - dbt_utils.accepted_range:
+              arguments:
+                min_value: 0
+                inclusive: true
+      - name: is_active
+        description: "Whether transaction is currently active/open"
+        tests:
+          - not_null
+          
+  - name: transaction_closures
+    description: "Closed transactions with closure timestamps"
+    columns:
+      - name: transaction_id
+        tests:
+          - unique
+          - not_null
+      - name: closed_at
+        description: "Timestamp when transaction closed"
+        tests:
+          - not_null
+          
+  - name: avg_open_time_by_month
+    description: "Average transaction open time by month"
+    columns:
+      - name: transaction_month
+        tests:
+          - not_null
+      - name: avg_days_open
+        description: "Average days transaction was open"
+        tests:
+          - dbt_utils.accepted_range:
+              arguments:
+                min_value: 0
+                inclusive: true
+              
+  - name: termination_reasons_analysis
+    description: "Most common termination reasons with counts and percentages"
+    columns:
+      - name: termination_reason
+        tests:
+          - not_null
+      - name: transaction_count
+        tests:
+          - dbt_utils.accepted_range:
+              arguments:
+                min_value: 0
+                inclusive: true
+              
+  - name: gross_proceeds_by_transfer_method
+    description: "Gross proceeds aggregated by transfer method"
+    columns:
+      - name: transfer_method
+        tests:
+          - not_null
+      - name: total_gross_proceeds
+        description: "Total gross proceeds by transfer method"
+        tests:
+          - dbt_utils.accepted_range:
+              arguments:
+                min_value: 0
+                inclusive: true
+
