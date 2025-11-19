@@ -1,4 +1,4 @@
-{{ config(enabled = false) }}
+{{ config(materialized='view') }}
 
 WITH
 
